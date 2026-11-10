@@ -1,0 +1,59 @@
+cs:
+  hero_title: Explore the world
+  hero_title_italic: through learning
+  hero_text: Pomáháme mladým lidem růst. Vysíláme mladé lidi na mezinárodní výměny Erasmus+ a pořádáme vlastní projekty o wellbeingu, zdraví a životě online.
+  hero_image: ""
+  blocks:
+    - title: Erasmus+ není jen pro vysokoškoláky
+      text: Na výměnu mládeže můžeš vyjet, i když jsi na střední, pracuješ, nebo zrovna nevíš, co dál. Cestovné, ubytování i jídlo hradí program Erasmus+, ty si přivezeš zkušenosti, kamarády z celé Evropy a certifikát Youthpass.
+      link_label: Jak to funguje
+      link: faq
+      image: ""
+    - title: Pořádáme vlastní projekty v Česku
+      text: Zveme mladé lidi z celé Evropy na výměny o duševním a fyzickém zdraví, udržitelnosti a vztahu k sociálním sítím. Co na nich vznikne, sdílíme dál v bookletech a pracovních listech.
+      link_label: Naše projekty
+      link: our
+      image: ""
+  stats_title: EUnity v číslech
+  stats:
+    - source: projects
+      value: ""
+      label: projektů, na kterých jsme byli
+    - source: countries
+      value: ""
+      label: evropských zemí
+    - source: ours
+      value: ""
+      label: vlastní výměny mládeže v Česku
+    - source: manual
+      value: ""
+      label: mladých lidí, které jsme vyslali
+en:
+  hero_title: Explore the world
+  hero_title_italic: through learning
+  hero_text: We help young people grow. We send young people to international Erasmus+ exchanges and organise our own projects on wellbeing, health and life online.
+  blocks:
+    - title: Erasmus+ isn’t just for university students
+      text: You can join a youth exchange while still at secondary school, while working, or while figuring out what’s next. Erasmus+ covers travel, accommodation and food – you bring home experience, friends from all over Europe and a Youthpass certificate.
+      link_label: How it works
+      link: faq
+      image: ""
+    - title: We run our own projects in Czechia
+      text: We invite young people from all over Europe to exchanges about mental and physical health, sustainability and our relationship with social media. What we create there, we share in booklets and worksheets.
+      link_label: Our projects
+      link: our
+      image: ""
+  stats_title: EUnity in numbers
+  stats:
+    - source: projects
+      value: ""
+      label: projects we took part in
+    - source: countries
+      value: ""
+      label: European countries
+    - source: ours
+      value: ""
+      label: own youth exchanges in Czechia
+    - source: manual
+      value: ""
+      label: young people we sent abroad

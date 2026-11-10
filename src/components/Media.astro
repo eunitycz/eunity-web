@@ -1,0 +1,7 @@
+---
+// Obrázek, nebo šedý zástupný blok, když fotka ještě chybí.
+const { src, alt = '', label = '', eager = false } = Astro.props;
+---
+{src
+  ? <img class="img-cover" src={src} alt={alt} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+  : <div class="ph img-cover" style="height: 100%" aria-hidden="true">{label}</div>}

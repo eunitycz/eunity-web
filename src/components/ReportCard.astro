@@ -1,0 +1,13 @@
+---
+import Media from './Media.astro';
+import { t, projectUrl, dateRange, countryName } from '../lib/i18n.js';
+const { p, lang } = Astro.props;
+const s = t[lang];
+const cover = p.cover || p.gallery?.[0];
+---
+<a class="report-card" href={projectUrl(p.slug, lang)}>
+  <div class="media"><Media src={cover} alt="" label={p.title} /></div>
+  <span class={`tag ${p.type === 'nas' ? 'tag-yellow' : ''}`}>{s.type[p.type] || s.type.vyslani}</span>
+  <h3>{p.title}</h3>
+  <span class="meta">{dateRange(p.start, p.end, lang)} · {p.place}{p.country && `, ${countryName(p.country, lang)}`}</span>
+</a>

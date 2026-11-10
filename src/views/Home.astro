@@ -1,0 +1,129 @@
+---
+import Base from '../layouts/Base.astro';
+import Media from '../components/Media.astro';
+import OfferCard from '../components/OfferCard.astro';
+import ReportCard from '../components/ReportCard.astro';
+import { t, url, md } from '../lib/i18n.js';
+import { getPage, getProjects, getStats } from '../lib/content.js';
+
+const { lang } = Astro.props;
+const s = t[lang];
+const home = getPage('home', lang);
+const faq = getPage('faq', lang);
+const support = getPage('podporte-nas', lang);
+const projects = getProjects(lang);
+const offer = projects.filter((p) => p.open).sort((a, b) => a.start - b.start).slice(0, 3);
+const past = projects.filter((p) => !p.upcoming).slice(0, 4);
+const stats = getStats(lang);
+const blockLink = (k) => (k && !k.startsWith('/') && !k.startsWith('http') ? url(k, lang) : k || url('offer', lang));
+---
+<Base lang={lang} alt={url('home', lang === 'cs' ? 'en' : 'cs')}>
+  <div class="container">
+    <section class="hero">
+      <div>
+        <div class="accent-rule"></div>
+        <h1 class="h-xl">{home.hero_title} {home.hero_title_italic && <em>{home.hero_title_italic}</em>}</h1>
+        <p class="lead">{home.hero_text}</p>
+        <div class="btn-row">
+          <a class="btn btn-blue" href={url('offer', lang)}>{s.offerTitle}</a>
+          <a class="btn btn-yellow" href={url('faq', lang)}>{lang === 'cs' ? 'Jak funguje Erasmus+' : 'How Erasmus+ works'}</a>
+        </div>
+      </div>
+      <div class="hero-media"><Media src={home.hero_image} alt="" label={lang === 'cs' ? 'Fotka z projektu' : 'Project photo'} eager /></div>
+    </section>
+  </div>
+
+  <section class="section-grey">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h-lg">{s.offerTitle}</h2>
+        <a class="link-arrow" href={url('offer', lang)}>{s.allProjects}</a>
+      </div>
+      {offer.length
+        ? <div class="grid">{offer.map((p) => <OfferCard p={p} lang={lang} />)}</div>
+        : <p class="empty" style="background: #fff">{s.noOffer}</p>}
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      {(home.blocks || []).map((b, i) => (
+        <div class={`split ${i % 2 ? 'reverse' : ''}`}>
+          <div class="media"><Media src={b.image} alt="" label={lang === 'cs' ? 'Fotka' : 'Photo'} /></div>
+          <div class="text">
+            <h2 class="h-md">{b.title}</h2>
+            <p>{b.text}</p>
+            {b.link_label && <a class="link-arrow" href={blockLink(b.link)}>{b.link_label}</a>}
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  {stats.length > 0 && (
+    <section class="section">
+      <div class="container">
+        <h2 class="h-lg" style="margin-bottom: 40px">{home.stats_title}</h2>
+        <div class="stats">
+          {stats.map((st) => <div class="stat"><strong>{st.value}</strong><span>{st.label}</span></div>)}
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="section">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="h-lg">{s.whereWeWere}</h2>
+        <a class="link-arrow" href={url('sent', lang)}>{s.allReports}</a>
+      </div>
+      <div class="grid-reports">{past.map((p) => <ReportCard p={p} lang={lang} />)}</div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container grid">
+      <div class="panel">
+        <h2>{s.booklets}</h2>
+        <p>{s.bookletsIntro}</p>
+        <a class="link-arrow" href={url('booklets', lang)}>{lang === 'cs' ? 'Prohlédnout booklety' : 'Browse booklets'}</a>
+      </div>
+      <div class="panel blue-top">
+        <h2>{s.worksheets}</h2>
+        <p>{s.worksheetsIntro}</p>
+        <a class="link-arrow" href={url('worksheets', lang)}>{lang === 'cs' ? 'Prohlédnout pracovní listy' : 'Browse worksheets'}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container faq-wrap">
+      <div>
+        <h2 class="h-lg">{faq.title}</h2>
+        <p class="lead" style="margin: 18px 0 28px; font-size: 17px">{faq.intro}</p>
+        <a class="link-arrow" href={url('faq', lang)}>{s.allQuestions}</a>
+      </div>
+      <div class="faq-list">
+        {(faq.items || []).slice(0, 4).map((q) => (
+          <details><summary>{q.question}</summary><div class="answer" set:html={md(q.answer)} /></details>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="support-box">
+        <div>
+          <h2 class="h-lg">{support.title}</h2>
+          <p class="lead" style="margin-top: 16px; font-size: 18px">{support.intro}</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-yellow" href={`${url('support', lang)}#dar`}>{s.donate}</a>
+          <a class="btn btn-blue" href={`${url('support', lang)}#dobrovolnictvi`}>{s.volunteer}</a>
+          <a class="btn btn-blue" href={`${url('support', lang)}#partnerstvi`}>{s.partnership}</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>

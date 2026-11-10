@@ -1,0 +1,18 @@
+# Každou noc web znovu sestaví, aby se projekty po začátku samy přesunuly
+# z „Aktuální nabídky“ mezi uplynulé. Potřebuje secret CLOUDFLARE_DEPLOY_HOOK
+# (Cloudflare Pages → Settings → Builds → Deploy hooks).
+name: Noční přestavění webu
+on:
+  schedule:
+    - cron: "15 1 * * *"
+  workflow_dispatch:
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Spustit nové sestavení
+        env:
+          HOOK: ${{ secrets.CLOUDFLARE_DEPLOY_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then echo "Deploy hook není nastavený"; exit 0; fi
+          curl -fsS -X POST "$HOOK"

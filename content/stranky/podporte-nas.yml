@@ -1,0 +1,21 @@
+cs:
+  title: Podpořte nás
+  intro: Díky vám může vyjet další mladý člověk. Pomoct můžete darem, svým časem jako dobrovolník, nebo jako partnerská organizace.
+  donate_title: Finanční dar
+  donate_text: Každý dar nám pomáhá pokrýt to, co granty nezaplatí – přípravu projektů, materiály pro účastníky a setkání před výjezdem i po něm. Na požádání vystavíme potvrzení o daru pro daňové účely.
+  bank_account: ""
+  variable_symbol: ""
+  qr_image: ""
+  volunteer_title: Dobrovolnictví
+  volunteer_text: Hledáme lidi, kteří pomohou s organizací našich výměn, s fotkami a videem, se sociálními sítěmi nebo s grafikou. Napište nám, co vás baví, a domluvíme se.
+  partner_title: Partnerství pro organizace
+  partner_text: Spolupracujeme se školami, neziskovými organizacemi i firmami. Můžeme společně připravit projekt, zapojit vaše studenty nebo pořádat workshop. Ozvěte se nám.
+en:
+  title: Support us
+  intro: Thanks to you, another young person can travel and learn. You can help with a donation, your time as a volunteer, or as a partner organisation.
+  donate_title: Donation
+  donate_text: Every donation helps us cover what grants don’t – project preparation, materials for participants and meetings before and after the trip. On request we issue a donation receipt for tax purposes.
+  volunteer_title: Volunteering
+  volunteer_text: We’re looking for people to help organise our exchanges, take photos and videos, run social media or design graphics. Tell us what you enjoy and we’ll find a way.
+  partner_title: Partnership for organisations
+  partner_text: We work with schools, NGOs and companies. We can prepare a project together, involve your students or run a workshop. Get in touch.

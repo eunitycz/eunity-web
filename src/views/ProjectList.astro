@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import OfferCard from '../components/OfferCard.astro';
+import ReportCard from '../components/ReportCard.astro';
+import { t, url } from '../lib/i18n.js';
+import { getProjects } from '../lib/content.js';
+
+const { lang, kind } = Astro.props; // kind: offer | our | sent
+const s = t[lang];
+const all = getProjects(lang);
+const list =
+  kind === 'offer' ? all.filter((p) => p.open).sort((a, b) => a.start - b.start)
+  : kind === 'our' ? all.filter((p) => !p.upcoming && p.type === 'nas')
+  : all.filter((p) => !p.upcoming && p.type !== 'nas');
+const title = s[kind === 'offer' ? 'offerTitle' : kind];
+const intro = s[`${kind === 'offer' ? 'offer' : kind === 'our' ? 'ourProjects' : 'sent'}Intro`];
+const other = lang === 'cs' ? 'en' : 'cs';
+---
+<Base lang={lang} title={title} alt={url(kind, other)}>
+  <div class="container">
+    <header class="page-head">
+      <div class="accent-rule"></div>
+      <h1 class="h-xl">{title}</h1>
+      <p class="lead">{intro}</p>
+    </header>
+    <nav class="filters" aria-label={s.projects}>
+      {['offer', 'our', 'sent'].map((k) => (
+        <a href={url(k, lang)} aria-current={k === kind ? 'page' : undefined}>{s[k]}</a>
+      ))}
+    </nav>
+    {list.length === 0 && <p class="empty">{kind === 'offer' ? s.noOffer : s.nothingYet}</p>}
+    {kind === 'offer'
+      ? <div class="grid">{list.map((p) => <OfferCard p={p} lang={lang} />)}</div>
+      : <div class="grid-reports">{list.map((p) => <ReportCard p={p} lang={lang} />)}</div>}
+  </div>
+</Base>

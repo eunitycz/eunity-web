@@ -1,0 +1,37 @@
+---
+// Jeden soubor generuje všechny stránky v obou jazycích (adresy jsou v src/lib/i18n.js).
+import Home from '../views/Home.astro';
+import ProjectList from '../views/ProjectList.astro';
+import ProjectDetail from '../views/ProjectDetail.astro';
+import Materials from '../views/Materials.astro';
+import Faq from '../views/Faq.astro';
+import About from '../views/About.astro';
+import Support from '../views/Support.astro';
+import Contact from '../views/Contact.astro';
+import { routes, projectUrl } from '../lib/i18n.js';
+import { getProjects } from '../lib/content.js';
+
+export function getStaticPaths() {
+  const strip = (u) => u.replace(/^\/|\/$/g, '') || undefined;
+  const paths = [];
+  for (const lang of ['cs', 'en']) {
+    for (const [view, byLang] of Object.entries(routes)) {
+      paths.push({ params: { path: strip(byLang[lang]) }, props: { lang, view } });
+    }
+    for (const p of getProjects(lang)) {
+      paths.push({ params: { path: strip(projectUrl(p.slug, lang)) }, props: { lang, view: 'project', p } });
+    }
+  }
+  return paths;
+}
+
+const { lang, view, p } = Astro.props;
+---
+{view === 'home' && <Home lang={lang} />}
+{['offer', 'our', 'sent'].includes(view) && <ProjectList lang={lang} kind={view} />}
+{view === 'project' && <ProjectDetail lang={lang} p={p} />}
+{['booklets', 'worksheets'].includes(view) && <Materials lang={lang} kind={view} />}
+{view === 'faq' && <Faq lang={lang} />}
+{view === 'about' && <About lang={lang} />}
+{view === 'support' && <Support lang={lang} />}
+{view === 'contact' && <Contact lang={lang} />}

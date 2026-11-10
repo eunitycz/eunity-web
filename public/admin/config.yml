@@ -1,0 +1,423 @@
+# Administrace webu EUnity (Sveltia CMS)
+# Přihlášení přes GitHub. Hodnoty repo a base_url se doplní při spuštění webu.
+backend:
+  name: github
+  repo: DOPLNIT/eunity-web
+  branch: main
+  base_url: https://DOPLNIT.workers.dev
+  commit_messages:
+    create: "Nový obsah: {{collection}} – {{slug}}"
+    update: "Úprava: {{collection}} – {{slug}}"
+    delete: "Smazáno: {{collection}} – {{slug}}"
+    uploadMedia: "Nahrán soubor {{path}}"
+    deleteMedia: "Smazán soubor {{path}}"
+
+site_url: https://www.eunity.cz
+display_url: https://www.eunity.cz
+logo_url: /favicon.svg
+
+media_folder: public/uploads
+public_folder: /uploads
+
+media_libraries:
+  default:
+    config:
+      slugify_filename: true
+      transformations:
+        raster_image:
+          format: webp
+          quality: 82
+          width: 2000
+          height: 2000
+
+i18n:
+  structure: single_file
+  locales: [cs, en]
+  default_locale: cs
+
+collections:
+  # ─────────────────────────── PROJEKTY ───────────────────────────
+  - name: projekty
+    label: Projekty
+    label_singular: projekt
+    description: >
+      Každý projekt projde celým životem: dokud nezačne, je v Aktuální nabídce.
+      Po začátku se sám přesune do „Naše projekty“ nebo „Vyslali jsme“ a doplníte k němu report a fotky.
+    folder: content/projekty
+    format: yml
+    extension: yml
+    create: true
+    i18n: true
+    identifier_field: title
+    slug: "{{title}}"
+    summary: "{{title}} · {{start | date('D. M. YYYY')}}"
+    sortable_fields:
+      fields: [start, title]
+      default:
+        field: start
+        direction: descending
+    view_filters:
+      - label: Náš projekt
+        field: type
+        pattern: nas
+      - label: Vyslali jsme
+        field: type
+        pattern: vyslani
+    fields:
+      - label: Název projektu
+        name: title
+        widget: string
+        i18n: true
+      - label: Typ
+        name: type
+        widget: select
+        i18n: duplicate
+        default: vyslani
+        options:
+          - { label: "Náš projekt (pořádá EUnity)", value: nas }
+          - { label: "Vyslali jsme (projekt partnera)", value: vyslani }
+      - label: Druh projektu
+        name: format
+        widget: select
+        i18n: duplicate
+        default: vymena
+        options:
+          - { label: "Výměna mládeže", value: vymena }
+          - { label: "Tréninkový kurz / mobilita youth workerů", value: trenink }
+          - { label: "Jiný projekt", value: jine }
+      - label: Začátek
+        name: start
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        i18n: duplicate
+      - label: Konec
+        name: end
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        i18n: duplicate
+      - label: Místo
+        name: place
+        widget: string
+        i18n: true
+        hint: Např. „Deštné v Orlických horách“. Zemi vyberte zvlášť níže.
+      - label: Země
+        name: country
+        widget: select
+        i18n: duplicate
+        options:
+          - { label: Albánie, value: AL }
+          - { label: Arménie, value: AM }
+          - { label: Belgie, value: BE }
+          - { label: Bosna a Hercegovina, value: BA }
+          - { label: Bulharsko, value: BG }
+          - { label: Černá Hora, value: ME }
+          - { label: Česko, value: CZ }
+          - { label: Dánsko, value: DK }
+          - { label: Estonsko, value: EE }
+          - { label: Finsko, value: FI }
+          - { label: Francie, value: FR }
+          - { label: Gruzie, value: GE }
+          - { label: Chorvatsko, value: HR }
+          - { label: Irsko, value: IE }
+          - { label: Island, value: IS }
+          - { label: Itálie, value: IT }
+          - { label: Kypr, value: CY }
+          - { label: Litva, value: LT }
+          - { label: Lotyšsko, value: LV }
+          - { label: Lucembursko, value: LU }
+          - { label: Maďarsko, value: HU }
+          - { label: Malta, value: MT }
+          - { label: Moldavsko, value: MD }
+          - { label: Německo, value: DE }
+          - { label: Nizozemsko, value: NL }
+          - { label: Norsko, value: "NO" }
+          - { label: Polsko, value: PL }
+          - { label: Portugalsko, value: PT }
+          - { label: Rakousko, value: AT }
+          - { label: Rumunsko, value: RO }
+          - { label: Řecko, value: GR }
+          - { label: Severní Makedonie, value: MK }
+          - { label: Slovensko, value: SK }
+          - { label: Slovinsko, value: SI }
+          - { label: Srbsko, value: RS }
+          - { label: Španělsko, value: ES }
+          - { label: Švédsko, value: SE }
+          - { label: Turecko, value: TR }
+          - { label: Ukrajina, value: UA }
+          - { label: Velká Británie, value: GB }
+      - label: Krátký popis (perex)
+        name: perex
+        widget: text
+        i18n: true
+        required: false
+        hint: Jedna až dvě věty. Zobrazí se pod nadpisem a ve výsledcích vyhledávání.
+      - label: Úvodní fotka
+        name: cover
+        widget: image
+        i18n: duplicate
+        required: false
+        hint: Když ji nevyplníte, použije se první fotka z galerie.
+
+      # Údaje pro aktuální nabídku
+      - label: Věk účastníků
+        name: age
+        widget: string
+        i18n: duplicate
+        required: false
+        hint: Např. „18–30“. Vyplňte, dokud je projekt v nabídce.
+      - label: Přihlášky do
+        name: deadline
+        widget: datetime
+        type: date
+        format: YYYY-MM-DD
+        i18n: duplicate
+        required: false
+        hint: Po tomto datu zmizí projekt z aktuální nabídky.
+      - label: Infopack
+        name: infopack
+        widget: file
+        i18n: duplicate
+        required: false
+        hint: Nahrajte PDF, nebo vložte odkaz (např. na Google Drive).
+      - label: Odkaz na přihlášku
+        name: application_url
+        widget: string
+        i18n: duplicate
+        required: false
+        hint: Např. odkaz na Google formulář.
+      - label: O projektu (pro aktuální nabídku)
+        name: description
+        widget: markdown
+        i18n: true
+        required: false
+
+      # Po projektu
+      - label: Report z projektu
+        name: report
+        widget: markdown
+        i18n: true
+        required: false
+        hint: Když napíšete report jen v jednom jazyce, zobrazí se v obou verzích webu.
+      - label: Autor/ka reportu
+        name: report_author
+        widget: string
+        i18n: duplicate
+        required: false
+      - label: Fotogalerie
+        name: gallery
+        widget: image
+        multiple: true
+        i18n: duplicate
+        required: false
+        hint: Můžete vybrat víc fotek najednou. Fotky z telefonu se samy zmenší.
+      - label: Videa (YouTube odkazy)
+        name: videos
+        widget: list
+        i18n: duplicate
+        required: false
+        field: { label: Odkaz, name: url, widget: string }
+      - label: Počet účastníků z EUnity
+        name: participants
+        widget: number
+        value_type: int
+        i18n: duplicate
+        required: false
+        hint: Kolik lidí jsme na projekt vyslali. Sčítá se do čísel na úvodní stránce.
+      - label: Skrýt na webu
+        name: hidden
+        widget: boolean
+        i18n: duplicate
+        required: false
+        default: false
+
+  # ─────────────────────────── BOOKLETY ───────────────────────────
+  - name: booklety
+    label: Booklety
+    label_singular: booklet
+    folder: content/booklety
+    format: yml
+    extension: yml
+    create: true
+    i18n: true
+    identifier_field: title
+    slug: "{{title}}"
+    fields:
+      - { label: Název, name: title, widget: string, i18n: true }
+      - { label: Krátký popis, name: perex, widget: text, i18n: true, required: false }
+      - { label: Obálka / náhled, name: cover, widget: image, i18n: duplicate, required: false }
+      - { label: Soubor (PDF), name: file, widget: file, i18n: true, hint: "Můžete nahrát zvlášť českou a anglickou verzi." }
+      - { label: Téma, name: topic, widget: string, i18n: true, required: false, hint: "Např. Duševní zdraví, Sociální sítě, Udržitelnost" }
+      - label: Z projektu
+        name: project
+        widget: relation
+        collection: projekty
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        i18n: duplicate
+        required: false
+      - { label: Datum vydání, name: date, widget: datetime, type: date, format: YYYY-MM-DD, i18n: duplicate, required: false }
+      - { label: Skrýt na webu, name: hidden, widget: boolean, i18n: duplicate, required: false, default: false }
+
+  # ─────────────────────────── PRACOVNÍ LISTY ───────────────────────────
+  - name: pracovni-listy
+    label: Pracovní listy
+    label_singular: pracovní list
+    folder: content/pracovni-listy
+    format: yml
+    extension: yml
+    create: true
+    i18n: true
+    identifier_field: title
+    slug: "{{title}}"
+    fields:
+      - { label: Název, name: title, widget: string, i18n: true }
+      - { label: Krátký popis, name: perex, widget: text, i18n: true, required: false }
+      - { label: Obálka / náhled, name: cover, widget: image, i18n: duplicate, required: false }
+      - { label: Soubor (PDF), name: file, widget: file, i18n: true, hint: "Můžete nahrát zvlášť českou a anglickou verzi." }
+      - { label: Téma, name: topic, widget: string, i18n: true, required: false, hint: "Např. Duševní zdraví, Sociální sítě, Udržitelnost" }
+      - label: Z projektu
+        name: project
+        widget: relation
+        collection: projekty
+        value_field: "{{slug}}"
+        search_fields: [title]
+        display_fields: [title]
+        i18n: duplicate
+        required: false
+      - { label: Datum vydání, name: date, widget: datetime, type: date, format: YYYY-MM-DD, i18n: duplicate, required: false }
+      - { label: Skrýt na webu, name: hidden, widget: boolean, i18n: duplicate, required: false, default: false }
+
+  # ─────────────────────────── STRÁNKY ───────────────────────────
+  - name: stranky
+    label: Stránky a nastavení
+    i18n: true
+    files:
+      - name: home
+        label: Úvodní stránka
+        file: content/stranky/home.yml
+        format: yml
+        i18n: true
+        fields:
+          - { label: Nadpis, name: hero_title, widget: string, i18n: true }
+          - { label: Nadpis – část v kurzívě, name: hero_title_italic, widget: string, i18n: true, required: false }
+          - { label: Text pod nadpisem, name: hero_text, widget: text, i18n: true }
+          - { label: Hlavní fotka, name: hero_image, widget: image, i18n: duplicate, required: false }
+          - label: Bloky „co děláme“
+            name: blocks
+            widget: list
+            i18n: true
+            fields:
+              - { label: Nadpis, name: title, widget: string }
+              - { label: Text, name: text, widget: text }
+              - { label: Fotka, name: image, widget: image, required: false }
+              - { label: Text odkazu, name: link_label, widget: string, required: false }
+              - label: Kam odkaz vede
+                name: link
+                widget: select
+                required: false
+                options:
+                  - { label: Aktuální nabídka, value: offer }
+                  - { label: Naše projekty, value: our }
+                  - { label: Vyslali jsme, value: sent }
+                  - { label: Otázky a odpovědi, value: faq }
+                  - { label: O nás, value: about }
+                  - { label: Podpořte nás, value: support }
+                  - { label: Booklety, value: booklets }
+                  - { label: Pracovní listy, value: worksheets }
+          - { label: Nadpis sekce s čísly, name: stats_title, widget: string, i18n: true }
+          - label: Čísla
+            name: stats
+            widget: list
+            i18n: true
+            hint: >
+              U automatických čísel nechte pole „Číslo“ prázdné – web je spočítá sám.
+              Když číslo vyplníte, použije se vaše. Číslo bez hodnoty se na webu nezobrazí.
+            fields:
+              - label: Odkud číslo vzít
+                name: source
+                widget: select
+                default: manual
+                options:
+                  - { label: "Automaticky: počet projektů", value: projects }
+                  - { label: "Automaticky: počet zemí", value: countries }
+                  - { label: "Automaticky: počet našich projektů", value: ours }
+                  - { label: "Automaticky: součet účastníků z EUnity", value: participants }
+                  - { label: "Zadám ručně", value: manual }
+              - { label: Číslo, name: value, widget: string, required: false }
+              - { label: Popisek, name: label, widget: string }
+
+      - name: faq
+        label: Otázky a odpovědi
+        file: content/stranky/faq.yml
+        format: yml
+        i18n: true
+        fields:
+          - { label: Nadpis, name: title, widget: string, i18n: true }
+          - { label: Úvodní text, name: intro, widget: text, i18n: true, required: false }
+          - label: Otázky
+            name: items
+            widget: list
+            i18n: true
+            summary: "{{fields.question}}"
+            hint: Na úvodní stránce se zobrazí první čtyři otázky. Pořadí změníte přetažením.
+            fields:
+              - { label: Otázka, name: question, widget: string }
+              - { label: Odpověď, name: answer, widget: markdown }
+
+      - name: o-nas
+        label: O nás
+        file: content/stranky/o-nas.yml
+        format: yml
+        i18n: true
+        fields:
+          - { label: Nadpis, name: title, widget: string, i18n: true }
+          - { label: Fotka, name: image, widget: image, i18n: duplicate, required: false }
+          - { label: Text, name: body, widget: markdown, i18n: true }
+
+      - name: podporte-nas
+        label: Podpořte nás
+        file: content/stranky/podporte-nas.yml
+        format: yml
+        i18n: true
+        fields:
+          - { label: Nadpis, name: title, widget: string, i18n: true }
+          - { label: Úvodní text, name: intro, widget: text, i18n: true }
+          - { label: "Dar – nadpis", name: donate_title, widget: string, i18n: true }
+          - { label: "Dar – text", name: donate_text, widget: markdown, i18n: true }
+          - { label: Číslo účtu, name: bank_account, widget: string, i18n: duplicate, required: false }
+          - { label: Variabilní symbol, name: variable_symbol, widget: string, i18n: duplicate, required: false }
+          - { label: QR kód pro platbu, name: qr_image, widget: image, i18n: duplicate, required: false }
+          - { label: "Dobrovolnictví – nadpis", name: volunteer_title, widget: string, i18n: true }
+          - { label: "Dobrovolnictví – text", name: volunteer_text, widget: markdown, i18n: true }
+          - { label: "Partnerství – nadpis", name: partner_title, widget: string, i18n: true }
+          - { label: "Partnerství – text", name: partner_text, widget: markdown, i18n: true }
+
+      - name: site
+        label: Kontakt a patička
+        file: content/stranky/site.yml
+        format: yml
+        i18n: true
+        fields:
+          - { label: Motto, name: tagline, widget: string, i18n: true }
+          - { label: E-mail, name: email, widget: string, i18n: duplicate }
+          - { label: Telefon, name: phone, widget: string, i18n: duplicate, required: false }
+          - { label: Název spolku, name: org_name, widget: string, i18n: duplicate }
+          - { label: Sídlo, name: address, widget: string, i18n: duplicate }
+          - { label: IČO, name: ico, widget: string, i18n: duplicate }
+          - { label: Spisová značka, name: registry, widget: string, i18n: true }
+          - { label: Instagram, name: instagram, widget: string, i18n: duplicate, required: false }
+          - { label: Facebook, name: facebook, widget: string, i18n: duplicate, required: false }
+          - { label: "Logo „Spolufinancováno EU“", name: funding_logo, widget: image, i18n: true, required: false, hint: "Oficiální logo ze stránek Evropské komise, česká a anglická verze." }
+          - { label: Klíč kontaktního formuláře (Web3Forms), name: form_key, widget: string, i18n: duplicate, required: false, hint: "Když je prázdné, na stránce Kontakt se místo formuláře zobrazí e-mail." }
+          - label: Partneři
+            name: partners
+            widget: list
+            i18n: duplicate
+            required: false
+            fields:
+              - { label: Název, name: name, widget: string }
+              - { label: Web, name: url, widget: string, required: false }
+              - { label: Logo, name: logo, widget: image, required: false }

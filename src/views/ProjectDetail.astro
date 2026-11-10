@@ -1,0 +1,128 @@
+---
+import Base from '../layouts/Base.astro';
+import Media from '../components/Media.astro';
+import { t, url, projectUrl, dateRange, oneDate, countryName, md, youtubeId } from '../lib/i18n.js';
+import { getBooklets, getWorksheets } from '../lib/content.js';
+
+const { lang, p } = Astro.props;
+const s = t[lang];
+const other = lang === 'cs' ? 'en' : 'cs';
+const backKey = p.upcoming ? 'offer' : p.type === 'nas' ? 'our' : 'sent';
+const materials = [...getBooklets(lang), ...getWorksheets(lang)].filter((m) => m.project === p.slug);
+const cover = p.cover || p.gallery[0];
+const label = p.type === 'nas' ? s.type.nas : s.format[p.format] || s.format.jine;
+---
+<Base lang={lang} title={p.title} description={p.perex} alt={projectUrl(p.slug, other)} image={cover}>
+  <div class="container">
+    <div style="padding-top: 40px"><a class="back" href={url(backKey, lang)}>{s[backKey === 'offer' ? 'offer' : backKey]}</a></div>
+    <header class="detail-head">
+      <div>
+        <span class={`tag ${p.type === 'nas' ? 'tag-yellow' : ''}`} style="margin-bottom: 18px">{label}</span>
+        <h1 class="h-xl" style="margin-top: 14px">{p.title}</h1>
+        {p.perex && <p class="lead" style="margin-top: 20px; max-width: 640px">{p.perex}</p>}
+      </div>
+      <aside class="facts">
+        <dl>
+          <dt>{s.date}</dt><dd>{dateRange(p.start, p.end, lang)}</dd>
+          <dt>{s.place}</dt><dd>{p.place}{p.country && `, ${countryName(p.country, lang)}`}</dd>
+          {p.age && <><dt>{s.age}</dt><dd>{p.age}</dd></>}
+          {p.upcoming && p.deadline && <><dt>{s.deadline}</dt><dd>{oneDate(p.deadline, lang)}</dd></>}
+        </dl>
+        {p.upcoming && (p.application_url || p.infopack) && (
+          <div class="btn-row">
+            {p.application_url && p.open && <a class="btn btn-yellow" href={p.application_url} rel="noopener">{s.apply}</a>}
+            {p.infopack && <a class="btn btn-blue" href={p.infopack} rel="noopener">{s.infopack}</a>}
+          </div>
+        )}
+      </aside>
+    </header>
+
+    {cover && <div class="detail-cover"><Media src={cover} alt={p.title} eager /></div>}
+
+    {p.description && (
+      <section class="section" style="padding-top: 64px">
+        <h2 class="h-md" style="margin-bottom: 24px">{s.aboutProject}</h2>
+        <div class="prose" set:html={md(p.description)} />
+      </section>
+    )}
+
+    {p.report && (
+      <section class="section" style="padding-top: 64px">
+        <h2 class="h-md" style="margin-bottom: 24px">{s.report}</h2>
+        <div class="prose" set:html={md(p.report)} />
+        {p.report_author && <p class="muted" style="margin-top: 8px; font-style: italic">{s.reportBy}: {p.report_author}</p>}
+      </section>
+    )}
+
+    {p.gallery.length > 0 && (
+      <section class="section" style="padding-top: 72px">
+        <h2 class="h-md" style="margin-bottom: 24px">{s.gallery}</h2>
+        <div class="gallery">
+          {p.gallery.map((src, i) => (
+            <button type="button" data-index={i} aria-label={`${s.gallery} ${i + 1}`}>
+              <img src={src} alt="" loading="lazy" decoding="async" />
+            </button>
+          ))}
+        </div>
+        <div class="lightbox" role="dialog" aria-modal="true" aria-label={s.gallery}>
+          <button class="close" type="button">{s.lightbox} ✕</button>
+          <button class="prev" type="button" aria-label="←">‹</button>
+          <img alt="" />
+          <button class="next" type="button" aria-label="→">›</button>
+        </div>
+      </section>
+    )}
+
+    {p.videos.length > 0 && (
+      <section class="section" style="padding-top: 72px">
+        <h2 class="h-md" style="margin-bottom: 24px">{s.videos}</h2>
+        <div class="videos">
+          {p.videos.map((v) => {
+            const id = youtubeId(v);
+            return id
+              ? <iframe src={`https://www.youtube-nocookie.com/embed/${id}`} title={p.title} loading="lazy" allowfullscreen></iframe>
+              : <a class="link-arrow" href={v} rel="noopener">{v}</a>;
+          })}
+        </div>
+      </section>
+    )}
+
+    {materials.length > 0 && (
+      <section class="section" style="padding-top: 72px">
+        <h2 class="h-md" style="margin-bottom: 24px">{s.materialsFromProject}</h2>
+        <div class="grid">
+          {materials.map((m) => (
+            <a class="mat" href={m.file} rel="noopener">
+              <div class="cover"><Media src={m.cover} alt="" label="PDF" /></div>
+              <h3>{m.title}</h3>
+              <span class="link-arrow" style="align-self: flex-start">{s.download}</span>
+            </a>
+          ))}
+        </div>
+      </section>
+    )}
+  </div>
+
+  <script>
+    const box = document.querySelector('.lightbox');
+    if (box) {
+      const imgs = [...document.querySelectorAll('.gallery img')].map((i) => i.getAttribute('src'));
+      const view = box.querySelector('img');
+      let idx = 0;
+      const show = (i) => { idx = (i + imgs.length) % imgs.length; view.src = imgs[idx]; };
+      const close = () => box.classList.remove('open');
+      document.querySelectorAll('.gallery button').forEach((b) =>
+        b.addEventListener('click', () => { show(+b.dataset.index); box.classList.add('open'); box.querySelector('.close').focus(); }));
+      box.querySelector('.close').addEventListener('click', close);
+      box.querySelector('.prev').addEventListener('click', () => show(idx - 1));
+      box.querySelector('.next').addEventListener('click', () => show(idx + 1));
+      box.addEventListener('click', (e) => { if (e.target === box) close(); });
+      document.addEventListener('keydown', (e) => {
+        if (!box.classList.contains('open')) return;
+        if (e.key === 'Escape') close();
+        if (e.key === 'ArrowLeft') show(idx - 1);
+        if (e.key === 'ArrowRight') show(idx + 1);
+      });
+    }
+  </script>
+</Base>

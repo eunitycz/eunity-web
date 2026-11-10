@@ -1,0 +1,21 @@
+---
+import Base from '../layouts/Base.astro';
+import Media from '../components/Media.astro';
+import { url, md } from '../lib/i18n.js';
+import { getPage } from '../lib/content.js';
+const { lang } = Astro.props;
+const page = getPage('o-nas', lang);
+const other = lang === 'cs' ? 'en' : 'cs';
+---
+<Base lang={lang} title={page.title} alt={url('about', other)}>
+  <div class="container">
+    <header class="page-head">
+      <div class="accent-rule"></div>
+      <h1 class="h-xl">{page.title}</h1>
+    </header>
+    <div class="split" style="align-items: flex-start">
+      <div class="text"><div class="prose" set:html={md(page.body)} /></div>
+      <div class="media" style="height: 480px"><Media src={page.image} alt="" label={lang === 'cs' ? 'Fotka týmu' : 'Team photo'} /></div>
+    </div>
+  </div>
+</Base>

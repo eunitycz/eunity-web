@@ -1,0 +1,21 @@
+---
+import Media from './Media.astro';
+import { t, projectUrl, dateRange, oneDate, countryName } from '../lib/i18n.js';
+const { p, lang } = Astro.props;
+const s = t[lang];
+const strip = p.type === 'nas' ? s.type.nas : s.format[p.format] || s.format.jine;
+const stripClass = p.type === 'nas' ? 'nas' : p.format === 'trenink' ? 'trenink' : '';
+---
+<a class="card" href={projectUrl(p.slug, lang)}>
+  <div class="card-media"><Media src={p.cover} alt="" label={p.title} /></div>
+  <div class={`card-strip ${stripClass}`}>{strip}</div>
+  <div class="card-body">
+    <h3>{p.title}</h3>
+    <p>
+      {dateRange(p.start, p.end, lang)} · {p.place}{p.country && `, ${countryName(p.country, lang)}`}
+      {(p.age || p.deadline) && <br />}
+      {p.age && `${s.age} ${p.age}`}{p.age && p.deadline && ' · '}{p.deadline && `${s.deadline.toLowerCase()} ${oneDate(p.deadline, lang)}`}
+    </p>
+    <span class="push"><span class="link-arrow">{s.detail}</span></span>
+  </div>
+</a>

@@ -1,0 +1,26 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, url, md } from '../lib/i18n.js';
+import { getPage } from '../lib/content.js';
+const { lang } = Astro.props;
+const s = t[lang];
+const faq = getPage('faq', lang);
+const other = lang === 'cs' ? 'en' : 'cs';
+---
+<Base lang={lang} title={faq.title} alt={url('faq', other)}>
+  <div class="container">
+    <header class="page-head">
+      <div class="accent-rule"></div>
+      <h1 class="h-xl">{faq.title}</h1>
+      <p class="lead">{faq.intro}</p>
+    </header>
+    <div class="faq-list" style="max-width: 860px">
+      {(faq.items || []).map((q, i) => (
+        <details open={i === 0}><summary>{q.question}</summary><div class="answer" set:html={md(q.answer)} /></details>
+      ))}
+    </div>
+    <p style="margin-top: 48px" class="muted">
+      {lang === 'cs' ? 'Nenašel jsi odpověď?' : 'Didn’t find your answer?'} <a href={url('contact', lang)}>{s.writeUs}</a>
+    </p>
+  </div>
+</Base>

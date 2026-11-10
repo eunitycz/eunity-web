@@ -1,0 +1,24 @@
+cs:
+  tagline: Pomáháme mladým lidem růst.
+  email: nina@eunity.cz
+  phone: ""
+  org_name: EUnity z.s.
+  address: Novoveská 987, Hluk 687 25
+  ico: "17993802"
+  registry: L 28823, Krajský soud v Brně
+  instagram: https://www.instagram.com/eunity_cz/
+  facebook: https://www.facebook.com/people/EUnity/100090507186045/
+  form_key: ""
+  partners:
+    - name: Panotrip
+      url: ""
+      logo: ""
+    - name: HKU
+      url: ""
+      logo: ""
+    - name: Miras
+      url: ""
+      logo: ""
+en:
+  tagline: We help young people grow.
+  registry: L 28823, Regional Court in Brno

@@ -1,0 +1,60 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, url } from '../lib/i18n.js';
+import { getPage } from '../lib/content.js';
+const { lang } = Astro.props;
+const s = t[lang];
+const site = getPage('site', lang);
+const other = lang === 'cs' ? 'en' : 'cs';
+---
+<Base lang={lang} title={s.contactTitle} alt={url('contact', other)}>
+  <div class="container">
+    <header class="page-head">
+      <div class="accent-rule"></div>
+      <h1 class="h-xl">{s.contactTitle}</h1>
+    </header>
+    <div class="split" style="align-items: flex-start; gap: 64px">
+      <div class="text">
+        {site.form_key
+          ? (
+            <form class="form" action="https://api.web3forms.com/submit" method="POST" data-form>
+              <input type="hidden" name="access_key" value={site.form_key} />
+              <input type="hidden" name="subject" value="Zpráva z webu eunity.cz" />
+              <input type="checkbox" name="botcheck" style="display: none" tabindex="-1" autocomplete="off" />
+              <label>{s.formName}<input name="name" required autocomplete="name" /></label>
+              <label>{s.formEmail}<input name="email" type="email" required autocomplete="email" /></label>
+              <label>{s.formMessage}<textarea name="message" required></textarea></label>
+              <button class="btn btn-blue" type="submit" style="align-self: flex-start">{s.formSend}</button>
+              <p class="note" data-thanks hidden>{s.formThanks}</p>
+            </form>
+          )
+          : (
+            <p class="lead">
+              {lang === 'cs' ? 'Napište nám e-mail, rádi odpovíme:' : 'Send us an e-mail, we’re happy to help:'}<br />
+              <a href={`mailto:${site.email}`} style="font-family: var(--serif); font-size: 30px; font-weight: 700">{site.email}</a>
+            </p>
+          )}
+      </div>
+      <div class="text">
+        <div class="facts" style="flex: none">
+          <dl>
+            <dt>E-mail</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd>
+            {site.phone && <><dt>{lang === 'cs' ? 'Telefon' : 'Phone'}</dt><dd>{site.phone}</dd></>}
+            <dt>{s.org}</dt><dd>{site.org_name}<br />{site.address}</dd>
+            <dt>{s.ico}</dt><dd>{site.ico}</dd>
+            {site.instagram && <><dt>Instagram</dt><dd><a href={site.instagram} rel="noopener">@eunity_cz</a></dd></>}
+            {site.facebook && <><dt>Facebook</dt><dd><a href={site.facebook} rel="noopener">EUnity</a></dd></>}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const form = document.querySelector('[data-form]');
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const res = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+      if (res.ok) { form.reset(); form.querySelector('[data-thanks]').hidden = false; }
+    });
+  </script>
+</Base>

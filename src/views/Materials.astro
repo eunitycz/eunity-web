@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import Media from '../components/Media.astro';
+import { t, url, projectUrl } from '../lib/i18n.js';
+import { getBooklets, getWorksheets, getProjects } from '../lib/content.js';
+
+const { lang, kind } = Astro.props; // booklets | worksheets
+const s = t[lang];
+const items = kind === 'booklets' ? getBooklets(lang) : getWorksheets(lang);
+const projects = Object.fromEntries(getProjects(lang).map((p) => [p.slug, p]));
+const other = lang === 'cs' ? 'en' : 'cs';
+const topics = [...new Set(items.map((m) => m.topic).filter(Boolean))];
+---
+<Base lang={lang} title={s[kind]} alt={url(kind, other)}>
+  <div class="container">
+    <header class="page-head">
+      <div class="accent-rule"></div>
+      <h1 class="h-xl">{s[kind]}</h1>
+      <p class="lead">{s[`${kind}Intro`]}</p>
+    </header>
+    <nav class="filters" aria-label={s.materials}>
+      {['booklets', 'worksheets'].map((k) => <a href={url(k, lang)} aria-current={k === kind ? 'page' : undefined}>{s[k]}</a>)}
+    </nav>
+    {topics.length > 1 && (
+      <div class="filters" data-topics>
+        <a href="#" aria-current="page" data-topic="">{lang === 'cs' ? 'Všechna témata' : 'All topics'}</a>
+        {topics.map((tp) => <a href="#" data-topic={tp}>{tp}</a>)}
+      </div>
+    )}
+    {items.length === 0
+      ? <p class="empty">{s.nothingYet}</p>
+      : (
+        <div class="grid">
+          {items.map((m) => (
+            <article class="mat" data-topic={m.topic || ''}>
+              <div class="cover"><Media src={m.cover} alt="" label="PDF" /></div>
+              {m.topic && <span class="tag">{m.topic}</span>}
+              <h3>{m.title}</h3>
+              {m.perex && <p>{m.perex}</p>}
+              {m.project && projects[m.project] && <p><a href={projectUrl(m.project, lang)}>{projects[m.project].title}</a></p>}
+              {m.file && <a class="link-arrow" style="align-self: flex-start; margin-top: auto" href={m.file} rel="noopener" download>{s.download}</a>}
+            </article>
+          ))}
+        </div>
+      )}
+  </div>
+  <script>
+    const bar = document.querySelector('[data-topics]');
+    bar?.addEventListener('click', (e) => {
+      const a = e.target.closest('a');
+      if (!a) return;
+      e.preventDefault();
+      bar.querySelectorAll('a').forEach((x) => x.removeAttribute('aria-current'));
+      a.setAttribute('aria-current', 'page');
+      const tp = a.dataset.topic;
+      document.querySelectorAll('.mat[data-topic]').forEach((m) => { m.hidden = !!tp && m.dataset.topic !== tp; });
+    });
+  </script>
+</Base>

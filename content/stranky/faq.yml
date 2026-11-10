@@ -1,0 +1,28 @@
+cs:
+  title: Otázky a odpovědi
+  intro: Na co se nás ptáte nejčastěji, než se přihlásíte.
+  items:
+    - question: Můžu jet na Erasmus, i když nestuduju na vysoké škole?
+      answer: Ano. Výměny mládeže a tréninkové kurzy v rámci Erasmus+ nejsou studijní pobyty. Může na ně jet student střední školy, pracující, nezaměstnaný i ten, kdo si dává pauzu. Rozhoduje hlavně věk a chuť se zapojit.
+    - question: Je to věkově omezené?
+      answer: Výměny mládeže jsou obvykle pro mladé lidi ve věku 13–30 let, přesné rozmezí si určuje každý projekt a najdeš ho v infopacku. Tréninkové kurzy pro pracovníky s mládeží věkové omezení většinou nemají.
+    - question: Dostanu omluvenku do školy nebo do práce?
+      answer: Na požádání ti vystavíme potvrzení o účasti na projektu, které můžeš předložit ve škole nebo v práci. O uvolnění ale rozhoduje škola, případně zaměstnavatel.
+    - question: Kolik mě projekt bude stát?
+      answer: Ubytování, jídlo a program hradí Erasmus+. Cestovné se proplácí podle vzdálenosti a pravidel konkrétního projektu. Případný účastnický poplatek je vždy uvedený v infopacku.
+    - question: Musím umět perfektně anglicky?
+      answer: Nemusíš. Stačí, když se domluvíš v základní angličtině. Na projektech je to společný jazyk a za týden se většina lidí rozmluví.
+en:
+  title: Questions & answers
+  intro: What people ask us most often before they apply.
+  items:
+    - question: Can I go on Erasmus even if I’m not a university student?
+      answer: Yes. Erasmus+ youth exchanges and training courses are not study stays. Secondary school students, working people, unemployed people and anyone taking a break can join. What matters most is your age and your motivation.
+    - question: Is there an age limit?
+      answer: Youth exchanges are usually for young people aged 13–30; each project sets its own exact range, which you’ll find in the infopack. Training courses for youth workers usually have no age limit.
+    - question: Will I get an excuse note for school or work?
+      answer: On request we issue a confirmation of participation that you can show at school or work. Whether you get time off is up to your school or employer.
+    - question: How much will it cost me?
+      answer: Accommodation, food and the programme are covered by Erasmus+. Travel costs are reimbursed according to distance and the rules of each project. Any participation fee is always stated in the infopack.
+    - question: Do I need perfect English?
+      answer: No. Basic English is enough. It’s the common language on projects, and within a week most people get much more confident.

@@ -1,0 +1,45 @@
+---
+import Base from '../layouts/Base.astro';
+import { t, url, md } from '../lib/i18n.js';
+import { getPage } from '../lib/content.js';
+const { lang } = Astro.props;
+const s = t[lang];
+const page = getPage('podporte-nas', lang);
+const other = lang === 'cs' ? 'en' : 'cs';
+---
+<Base lang={lang} title={page.title} alt={url('support', other)}>
+  <div class="container">
+    <header class="page-head">
+      <div class="accent-rule"></div>
+      <h1 class="h-xl">{page.title}</h1>
+      <p class="lead">{page.intro}</p>
+    </header>
+
+    <div class="grid" style="align-items: stretch">
+      <section class="panel" id="dar">
+        <h2>{page.donate_title}</h2>
+        <div class="prose" style="margin: 14px 0 24px; font-size: 16px; color: var(--grey-text)" set:html={md(page.donate_text)} />
+        {page.bank_account && (
+          <div class="bank">
+            <div>
+              <span class="muted" style="font-size: 13px; font-weight: 600">{s.bank}</span><br />
+              <strong>{page.bank_account}</strong>
+              {page.variable_symbol && <><br /><span class="muted" style="font-size: 14px">{s.vs}: {page.variable_symbol}</span></>}
+            </div>
+            {page.qr_image && <img src={page.qr_image} alt="QR platba" width="120" height="120" />}
+          </div>
+        )}
+      </section>
+      <section class="panel blue-top" id="dobrovolnictvi">
+        <h2>{page.volunteer_title}</h2>
+        <div class="prose" style="margin: 14px 0 24px; font-size: 16px; color: var(--grey-text)" set:html={md(page.volunteer_text)} />
+        <a class="link-arrow" href={url('contact', lang)}>{s.writeUs}</a>
+      </section>
+      <section class="panel" id="partnerstvi">
+        <h2>{page.partner_title}</h2>
+        <div class="prose" style="margin: 14px 0 24px; font-size: 16px; color: var(--grey-text)" set:html={md(page.partner_text)} />
+        <a class="link-arrow" href={url('contact', lang)}>{s.writeUs}</a>
+      </section>
+    </div>
+  </div>
+</Base>

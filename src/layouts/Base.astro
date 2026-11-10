@@ -1,0 +1,121 @@
+---
+import '../styles/global.css';
+import { t, url } from '../lib/i18n.js';
+import { getPage } from '../lib/content.js';
+
+const { lang = 'cs', title, description, alt, image } = Astro.props;
+const s = t[lang];
+const site = getPage('site', lang);
+const other = lang === 'cs' ? 'en' : 'cs';
+const altHref = alt || url('home', other);
+const fullTitle = title ? `${title} | EUnity` : 'EUnity – Explore the world through learning';
+const desc = description || site.tagline;
+const year = new Date().getFullYear();
+---
+<!doctype html>
+<html lang={lang}>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{fullTitle}</title>
+  <meta name="description" content={desc} />
+  <meta property="og:title" content={fullTitle} />
+  <meta property="og:description" content={desc} />
+  {image && <meta property="og:image" content={new URL(image, Astro.site)} />}
+  <link rel="alternate" hreflang={other} href={new URL(altHref, Astro.site)} />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inria+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a class="logo" href={url('home', lang)}>EUnity</a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="nav">{s.menu}</button>
+      <nav class="nav" id="nav" aria-label={s.menu}>
+        <details>
+          <summary>{s.projects}</summary>
+          <div class="dropdown">
+            <a href={url('offer', lang)}>{s.offer}</a>
+            <a href={url('our', lang)}>{s.our}</a>
+            <a href={url('sent', lang)}>{s.sent}</a>
+          </div>
+        </details>
+        <details>
+          <summary>{s.materials}</summary>
+          <div class="dropdown">
+            <a href={url('booklets', lang)}>{s.booklets}</a>
+            <a href={url('worksheets', lang)}>{s.worksheets}</a>
+          </div>
+        </details>
+        <a href={url('faq', lang)}>{s.faq}</a>
+        <a href={url('about', lang)}>{s.about}</a>
+        <a href={url('support', lang)}>{s.support}</a>
+        <a href={url('contact', lang)}>{s.contact}</a>
+      </nav>
+      <div class="lang">
+        {lang === 'cs' ? <span>CZ</span> : <a href={altHref} hreflang="cs">CZ</a>}
+        {lang === 'en' ? <span>EN</span> : <a href={altHref} hreflang="en">EN</a>}
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <slot />
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="cols">
+        <div>
+          <span class="brand">EUnity</span>
+          <span class="tag-line">{site.tagline}</span>
+        </div>
+        <div>
+          <strong>{s.org}</strong>
+          <span class="soft">{site.org_name}<br />{site.address}<br />{s.ico} {site.ico}<br />{site.registry}</span>
+        </div>
+        <div>
+          <strong>{s.social}</strong>
+          {site.instagram && <a href={site.instagram} rel="noopener">Instagram</a>}
+          {site.facebook && <a href={site.facebook} rel="noopener">Facebook</a>}
+        </div>
+        <div>
+          <strong>{s.contact}</strong>
+          {site.email && <a href={`mailto:${site.email}`} style="color: var(--yellow)">{site.email}</a>}
+          {site.phone && <a href={`tel:${site.phone.replace(/\s/g, '')}`}>{site.phone}</a>}
+          {site.partners?.length > 0 && (
+            <span class="soft" style="margin-top: 10px">
+              {s.partners}: {site.partners.map((p, i) => (
+                <>{i > 0 && ' · '}{p.url ? <a href={p.url} rel="noopener">{p.name}</a> : p.name}</>
+              ))}
+            </span>
+          )}
+        </div>
+      </div>
+      <div class="bottom">
+        <span>© {year} {site.org_name}</span>
+        {site.funding_logo
+          ? <img src={site.funding_logo} alt={lang === 'cs' ? 'Spolufinancováno Evropskou unií' : 'Co-funded by the European Union'} style="height: 44px; width: auto; background: #fff; padding: 6px 10px; border-radius: 4px" />
+          : <span>{lang === 'cs' ? 'Spolufinancováno Evropskou unií – program Erasmus+' : 'Co-funded by the European Union – Erasmus+ programme'}</span>}
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.menu-toggle');
+    const nav = document.getElementById('nav');
+    btn?.addEventListener('click', () => {
+      const open = nav.classList.toggle('open');
+      btn.setAttribute('aria-expanded', String(open));
+    });
+    // na počítači zavřít rozbalovací menu po kliknutí mimo
+    document.addEventListener('click', (e) => {
+      document.querySelectorAll('.nav details[open]').forEach((d) => {
+        if (!d.contains(e.target)) d.removeAttribute('open');
+      });
+    });
+  </script>
+</body>
+</html>
