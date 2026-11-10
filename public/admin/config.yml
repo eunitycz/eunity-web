@@ -2,9 +2,9 @@
 # Přihlášení přes GitHub. Hodnoty repo a base_url se doplní při spuštění webu.
 backend:
   name: github
-  repo: DOPLNIT/eunity-web
+  repo: eunitycz/eunity-web
   branch: main
-  base_url: https://DOPLNIT.workers.dev
+  base_url: https://sveltia-cms-auth.nina-3db.workers.dev
   commit_messages:
     create: "Nový obsah: {{collection}} – {{slug}}"
     update: "Úprava: {{collection}} – {{slug}}"
